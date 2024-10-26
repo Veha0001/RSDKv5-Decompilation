@@ -1,12 +1,9 @@
 name: Build RSDKv5
 
-on:
-  push:
-    branches:
-      - master
+on: [workflow_dispatch]
 
 env:
-  GENERAL_FLAGS: "-DRETRO_DISABLE_PLUS=ON -DCMAKE_BUILD_TYPE=Release"
+  GENERAL_FLAGS: "-DRETRO_DISABLE_PLUS=OFF -DCMAKE_BUILD_TYPE=Release"
   V5_FLAGS: "-DRETRO_REVISION=2"
   V5U_FLAGS: "-DRETRO_REVISION=3"
   # Normally you would use $VCPKG_INSTALLATION_PATH, but it's broken...so hardcode C:/vcpkg
@@ -23,6 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'RSDKModding/RSDKv5-Decompilation'
           submodules: recursive
       - name: Install dependencies
         run: vcpkg install libtheora libogg --triplet=x86-windows-static
@@ -47,6 +45,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'RSDKModding/RSDKv5-Decompilation'
           submodules: recursive
       - name: Install dependencies
         run: vcpkg install libtheora libogg --triplet=x64-windows-static
@@ -71,6 +70,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'RSDKModding/RSDKv5-Decompilation'
           submodules: recursive
       - name: Install dependencies
         run: |
@@ -100,6 +100,7 @@ jobs:
       - name: Checkout RSDKv5
         uses: actions/checkout@v4
         with:
+          repository: 'RSDKModding/RSDKv5-Decompilation'
           submodules: recursive
       - name: Checkout Sonic Mania
         uses: actions/checkout@v4
@@ -146,10 +147,10 @@ jobs:
       - name: Build Mania+RSDKv5 Android
         working-directory: ./android
         run: |
-          ./gradlew assemble --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS -PRETRO_REVISION=3
+          ./gradlew assemble --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a"  -PRETRO_REVISION=3
           mv app/build/outputs/apk/release/*.apk rsdkv5u_mania.apk
           ./gradlew clean
-          ./gradlew  assemble --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS -PRETRO_REVISION=2
+          ./gradlew  assemble --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_REVISION=2
           mv app/build/outputs/apk/release/*.apk rsdkv5_mania.apk
       - name: Bundle APK & mods
         run: |
